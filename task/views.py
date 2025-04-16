@@ -1,3 +1,5 @@
+from django.urls import reverse_lazy
+
 from .models import (
     Task,
     TaskType,
@@ -20,3 +22,11 @@ class TaskDetail(generic.DetailView):
     model = Task
     context_object_name = "task_detail"
     template_name = "task/task_detail.html"
+
+
+class TaskCreate(generic.CreateView):
+    model = Task
+    fields = "__all__"
+    context_object_name = "task_create"
+    template_name = "task/task_create.html"
+    success_url = reverse_lazy("task:home")
