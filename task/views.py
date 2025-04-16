@@ -48,8 +48,32 @@ class TaskDeleteView(generic.DeleteView):
     success_url = reverse_lazy("task:home")
 
 
-class WorkerListView(generic.ListView):
+class WorkersListView(generic.ListView):
     model = Worker
-    context_object_name = "worker_list"
-    template_name = ("task/worker_list.html")
+    context_object_name = "workers_list"
+    template_name = "task/workers_list.html"
     paginate_by = 10
+
+
+class WorkersDetailView(generic.DetailView):
+    model = Worker
+    context_object_name = "workers_detail"
+    template_name = "task/workers_detail.html"
+
+
+class WorkersUpdateView(generic.UpdateView):
+    model = Worker
+    context_object_name = "worker_update"
+    template_name = "task/workers_update.html"
+    fields = ["username", "first_name", "last_name", "email", "position"]
+    def get_success_url(self):
+        return reverse("task:worker_detail", kwargs={"pk": self.object.pk})
+
+
+
+class WorkersDeleteView(generic.DeleteView):
+    model = Worker
+    context_object_name = "workers_delete"
+    template_name = "task/workers_confirm_delete.html"
+    success_url = reverse_lazy("task:home")
+
