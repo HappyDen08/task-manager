@@ -11,20 +11,20 @@ from django.shortcuts import render
 from django.views import generic
 
 
-class Home(generic.ListView):
+class HomeView(generic.ListView):
     model = Task
     context_object_name = "task_list"
     template_name = "task/task_list.html"
     paginate_by = 5
 
 
-class TaskDetail(generic.DetailView):
+class TaskDetailView(generic.DetailView):
     model = Task
     context_object_name = "task_detail"
     template_name = "task/task_detail.html"
 
 
-class TaskCreate(generic.CreateView):
+class TaskCreateView(generic.CreateView):
     model = Task
     fields = "__all__"
     context_object_name = "task_create"
@@ -32,7 +32,7 @@ class TaskCreate(generic.CreateView):
     success_url = reverse_lazy("task:home")
 
 
-class TaskUpdate(generic.UpdateView):
+class TaskUpdateView(generic.UpdateView):
     model = Task
     fields = "__all__"
     context_object_name = "task_update"
@@ -41,8 +41,10 @@ class TaskUpdate(generic.UpdateView):
         return reverse("task:task_detail", kwargs={"pk": self.object.pk})
 
 
-class TaskDelete(generic.DeleteView):
+class TaskDeleteView(generic.DeleteView):
     model = Task
     context_object_name = "task_delete"
     template_name = "task/task_confirm_delete.html"
     success_url = reverse_lazy("task:home")
+
+
