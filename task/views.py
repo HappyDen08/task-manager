@@ -48,3 +48,8 @@ class TaskDeleteView(generic.DeleteView):
     success_url = reverse_lazy("task:home")
 
 
+class WorkerListView(generic.ListView):
+    model = Worker
+    context_object_name = "worker_list"
+    template_name = ("task/worker_list.html")
+    paginate_by = 10
