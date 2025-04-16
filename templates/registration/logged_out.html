@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Logged Out{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow-sm border-0 text-center">
+        <div class="card-body">
+            {% if user.is_authenticated %}
+                <h3 class="card-title mb-3">Still Logged In</h3>
+                <p class="mb-4 text-muted">You're still logged in. Click below to fully log out.</p>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Log Out Now</button>
+                </form>
+            {% else %}
+                <h3 class="card-title mb-3">You have been logged out</h3>
+                <p class="mb-4 text-muted">Thanks for visiting! You can log in again below if you'd like.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary">Log In Again</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
