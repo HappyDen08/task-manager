@@ -24,7 +24,8 @@
                     <div class="list-group">
                         <a href="/" class="list-group-item list-group-item-action">Home</a>
                         <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action">Admin</a>
-                        <!-- Можеш додати ще -->
+                      	<a href="{% url "task:worker_list" %}" class="list-group-item list-group-item-action">Workers</a>
+											<!-- Можеш додати ще -->
                     </div>
                 {% endblock %}
             </div>
