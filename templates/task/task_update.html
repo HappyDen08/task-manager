@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Update Task{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Update Task</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary mt-3">Update</button>
+        <a href="{% url 'task:task_detail' task_update.pk %}" class="btn btn-secondary mt-3 ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}
