@@ -34,7 +34,7 @@
                 {% if task_detail.assignees.all %}
                     <ul class="list-unstyled mb-0">
                         {% for worker in task_detail.assignees.all %}
-                            <li>👤 {{ worker.get_full_name|default:worker.username }}</li>
+                            <li>👤 {{ worker.first_name }} {{ worker.last_name }}</li>
                         {% endfor %}
                     </ul>
                 {% else %}
