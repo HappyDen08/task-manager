@@ -12,7 +12,11 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="/">Task Manager</a>
+            {% if user.is_authenticated %}
+                <a class="navbar-brand" href="/">Task Manager</a>
+            {% else %}
+                <a class="navbar-brand" href="{% url "login" %}">Task Manager</a>
+            {% endif %}
         </div>
     </nav>
 
@@ -20,21 +24,41 @@
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 mb-4">
-                {% block sidebar %}
-                    <div class="list-group">
-                        <a href="/" class="list-group-item list-group-item-action">Home</a>
-                        <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action">Admin</a>
-                      	<a href="{% url "task:workers_list" %}" class="list-group-item list-group-item-action">Workers</a>
-											<!-- Можеш додати ще -->
-                    </div>
-                {% endblock %}
-            </div>
+							{% block sidebar %}
+									<div class="list-group">
+											{% if user.is_authenticated %}
+													<span class="list-group-item list-group-item-action disabled text-start">
+															{{ user.first_name }} {{ user.last_name }}
+													</span>
+
+													<form method="post" action="{% url 'logout' %}">
+															{% csrf_token %}
+															<button type="submit" class="list-group-item list-group-item-action btn btn-danger w-100 text-start">
+																	Logout
+															</button>
+													</form>
+
+													<div class="my-2"></div>
+
+													<!-- Посилання -->
+													<a href="/" class="list-group-item list-group-item-action">My task</a>
+													<a href="{% url "task:task_list" %}" class="list-group-item list-group-item-action">All task</a>
+													<a href="{% url "task:workers_list" %}" class="list-group-item list-group-item-action">Workers</a>
+											{% else %}
+													<div class="my-2"></div>
+													<li class="list-group-item">
+															<a href="{% url 'login' %}?next={{ request.path }}">Login</a>
+													</li>
+											{% endif %}
+									</div>
+							{% endblock %}
+						</div>
 
             <!-- Main content -->
             <div class="col-md-9">
                 {% block content %}
                 {% endblock %}
-
+                {% if user.is_authenticated %}
                 <!-- Pagination -->
                 {% block pagination %}
                     {% if is_paginated %}
@@ -75,6 +99,7 @@
                         </nav>
                     {% endif %}
                 {% endblock %}
+                {% endif %}
             </div>
         </div>
     </div>
