@@ -39,3 +39,10 @@ class TaskUpdate(generic.UpdateView):
     template_name = "task/task_update.html"
     def get_success_url(self):
         return reverse("task:task_detail", kwargs={"pk": self.object.pk})
+
+
+class TaskDelete(generic.DeleteView):
+    model = Task
+    context_object_name = "task_delete"
+    template_name = "task/task_confirm_delete.html"
+    success_url = reverse_lazy("task:home")
