@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Task List{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Task List</h2>
+
+    {% if task_list %}
+        <div class="list-group">
+            {% for task in task_list %}
+                <div class="list-group-item {% if task.is_completed %}list-group-item-success{% endif %}">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ task.name }}</h5>
+                        <small>
+                            {% if task.deadline %}
+                                Due {{ task.deadline|date:"M d, Y" }}
+                            {% else %}
+                                No deadline
+                            {% endif %}
+                        </small>
+                    </div>
+
+                    <p class="mb-1">
+                        <span id="short-desc-{{ task.id }}">{{ task.description|truncatewords:20 }}</span>
+                        <span id="full-desc-{{ task.id }}" style="display: none;">{{ task.description }}</span>
+                        {% if task.description|length > 100 %}
+                            <button class="btn btn-sm btn-link p-0" onclick="toggleDescription({{ task.id }})" id="toggle-btn-{{ task.id }}">More</button>
+                        {% endif %}
+                    </p>
+
+                    <small>
+                        Type: {{ task.task_type.name }} |
+                        Priority: {{ task.priority }} |
+                        Completed: {% if task.is_completed %}✅{% else %}❌{% endif %}
+                    </small>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No tasks available.</p>
+    {% endif %}
+{% endblock %}
+
+{% block pagination %}
+    {{ block.super }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleDescription(taskId) {
+        const shortDesc = document.getElementById(`short-desc-${taskId}`);
+        const fullDesc = document.getElementById(`full-desc-${taskId}`);
+        const button = document.getElementById(`toggle-btn-${taskId}`);
+
+        if (shortDesc.style.display === "none") {
+            shortDesc.style.display = "inline";
+            fullDesc.style.display = "none";
+            button.textContent = "More";
+        } else {
+            shortDesc.style.display = "none";
+            fullDesc.style.display = "inline";
+            button.textContent = "Less";
+        }
+    }
+</script>
+{% endblock %}
