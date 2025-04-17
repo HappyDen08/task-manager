@@ -5,8 +5,10 @@
 {% block content %}
     <div class="d-flex justify-content-between align-items-center mb-4 px-2">
         <h2 class="mb-0">My Tasks</h2>
+				<a href="{% url 'task:task_myself_create' %}" class="btn btn-sm btn-outline-primary">
+            ➕ Add Task
+        </a>
     </div>
-
     {% if home %}
         <div class="list-group">
             {% for task in home %}
