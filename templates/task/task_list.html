@@ -12,6 +12,10 @@
 			{% endif %}
 	</div>
     {% if task_list %}
+			<form method="get" class="mb-4 px-2 d-flex" role="search">
+				<input type="text" name="q" class="form-control me-2" placeholder="Search tasks..." value="{{ request.GET.q }}">
+				<button type="submit" class="btn btn-outline-primary">Search</button>
+			</form>
         <div class="list-group">
             {% for task in task_list %}
                 <div class="list-group-item {% if task.is_completed %}list-group-item-success{% endif %}">
@@ -42,6 +46,16 @@
                             Type: {{ task.task_type.name }} |
                             Priority: {{ task.priority }} |
                             Completed: {% if task.is_completed %}✅{% else %}❌{% endif %}
+														{% if user.is_staff %}
+															<form method="post" action="{% url 'task:toggle_done' task.id %}">
+																{% csrf_token %}
+																{% if task.is_completed %}
+																	<button type="submit" class="btn btn-warning btn-sm">Not complete</button>
+																{% else %}
+																	<button type="submit" class="btn btn-success btn-sm">Complete</button>
+																{% endif %}
+															</form>
+														{% endif %}
                         </small>
                         <a href="{% url 'task:task_detail' task.id %}" class="btn btn-sm btn-outline-primary">
                             See detail
