@@ -3,6 +3,7 @@ from django.db.models import Q
 
 from .models import Task, Worker
 
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
