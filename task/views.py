@@ -3,18 +3,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
-from django.template.context_processors import request
 from django.urls import reverse_lazy, reverse
 
 from .forms import TaskForm
 from .models import (
     Task,
-    TaskType,
-    Worker,
-    Position
+    Worker
 )
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
 
@@ -45,14 +42,17 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Task.objects.annotate(total_assignees=Count("assignees")).filter(
+        queryset = Task.objects.annotate(
+            total_assignees=Count("assignees")).filter(
             total_assignees__gte=2).order_by("deadline")
         query = self.request.GET.get("q")
         if query:
             queryset = queryset.filter(
-                Q(name__icontains=query) | Q(assignees__first_name__icontains=query)
+                Q(name__icontains=query) |
+                Q(assignees__first_name__icontains=query)
             )
         return queryset
+
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     model = Task
@@ -66,10 +66,14 @@ class TaskMyselfDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "task/task_myself_detail.html"
 
 
-
 class TaskCreateMyselfView(LoginRequiredMixin, generic.CreateView):
     model = Task
-    fields = ["name", "description", "deadline", "task_type", "is_completed", "priority"]
+    fields = ["name",
+              "description",
+              "deadline",
+              "task_type",
+              "is_completed",
+              "priority"]
     context_object_name = "task_myself_create"
     template_name = "task/task_myself_create.html"
     success_url = reverse_lazy("task:home")
@@ -89,7 +93,6 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("task:task_list")
 
 
-
 class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Task
     form_class = TaskForm
@@ -102,12 +105,20 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 class TaskMyselfUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Task
-    fields = ["name", "description", "deadline", "task_type", "is_completed", "priority"]
+    fields = ["name",
+              "description",
+              "deadline",
+              "task_type",
+              "is_completed",
+              "priority"]
     context_object_name = "task_myself_update"
     template_name = "task/task_myself_update.html"
 
     def get_success_url(self):
-        return reverse("task:task_myself_detail", kwargs={"pk": self.object.pk})
+        return reverse(
+            "task:task_myself_detail",
+            kwargs={"pk": self.object.pk}
+        )
 
 
 class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
