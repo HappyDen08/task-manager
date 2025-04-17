@@ -3,84 +3,96 @@
 {% block title %}My Tasks{% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-4 px-2">
-        <h2 class="mb-0">My Tasks</h2>
-				<a href="{% url 'task:task_myself_create' %}" class="btn btn-sm btn-outline-primary">
-            ➕ Add Task
-        </a>
-    </div>
-    {% if home %}
-			<form method="get" class="mb-4 px-2 d-flex" role="search">
-				<input type="text" name="q" class="form-control me-2" placeholder="Search tasks..." value="{{ request.GET.q }}">
-				<button type="submit" class="btn btn-outline-primary">Search</button>
-			</form>
-        <div class="list-group">
-            {% for task in home %}
-                <div class="list-group-item {% if task.is_completed %}list-group-item-success{% endif %}">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ task.name }}</h5>
-                        <small>
-                            {% if task.deadline %}
-                                Due {{ task.deadline|date:"M d, Y" }}
-                            {% else %}
-                                No deadline
-                            {% endif %}
-                        </small>
-                    </div>
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">📝 My Tasks</h2>
+    <a href="{% url 'task:task_myself_create' %}" class="btn btn-primary shadow-sm">
+      ➕ Add Task
+    </a>
+  </div>
 
-                    <p class="mb-1">
-                        <span id="short-desc-{{ task.id }}">{{ task.description|truncatewords:20 }}</span>
-                        <span id="full-desc-{{ task.id }}" style="display: none;">{{ task.description }}</span>
-                        {% if task.description|length > 100 %}
-                            <button type="button"
-                                    class="btn btn-sm btn-link p-0"
-                                    onclick="toggleDescription({{ task.id }})"
-                                    id="toggle-btn-{{ task.id }}">More</button>
-                        {% endif %}
-                    </p>
+  {% if home %}
+  <form method="get" class="mb-4 d-flex gap-2" role="search">
+    <input type="text" name="q" class="form-control shadow-sm" placeholder="Search tasks..." value="{{ request.GET.q }}">
+    <button type="submit" class="btn btn-outline-primary">Search</button>
+  </form>
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small>
-                            Type: {{ task.task_type.name }} |
-                            Priority: {{ task.priority }} |
-                            Completed: {% if task.is_completed %}✅{% else %}❌{% endif %}
-														<form method="post" action="{% url 'task:toggle_done' task.id %}">
-															{% csrf_token %}
-															{% if task.is_completed %}
-																<button type="submit" class="btn btn-warning btn-sm">Not complete</button>
-															{% else %}
-																<button type="submit" class="btn btn-success btn-sm">Complete</button>
-															{% endif %}
-														</form>
-                        </small>
-                        <a href="{% url 'task:task_myself_detail' task.id %}" class="btn btn-sm btn-outline-primary">
-                            See detail
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>No tasks assigned to you.</p>
-    {% endif %}
+  <div class="row g-4">
+    {% for task in home %}
+    <div class="col-12">
+			<div class="card shadow-sm border {% if task.is_completed %}border-success{% endif %}" style="{% if task.is_completed %}background-color: #90e18e;{% else %}background-color: rgba(255,253,246,0.95);{% endif %}">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-start mb-2">
+						<h5 class="card-title">{{ task.name }}</h5>
+						<small class="text-muted">
+							{% if task.deadline %}
+								⏰ {{ task.deadline|date:"M d, Y" }}
+							{% else %}
+								🕓 No deadline
+							{% endif %}
+						</small>
+					</div>
+
+					<p class="card-text">
+						<span id="short-desc-{{ task.id }}">{{ task.description|truncatewords:20 }}</span>
+						<span id="full-desc-{{ task.id }}" style="display: none;">{{ task.description }}</span>
+						{% if task.description|length > 100 %}
+						<button type="button"
+							class="btn btn-sm btn-link p-0"
+							onclick="toggleDescription({{ task.id }})"
+							id="toggle-btn-{{ task.id }}">More</button>
+						{% endif %}
+					</p>
+
+					<div class="d-flex justify-content-between align-items-center mt-3">
+						<div class="small text-muted">
+							🗂 Type: {{ task.task_type.name }} |
+							🚩 Priority: {{ task.priority }} |
+							✅ Completed: {% if task.is_completed %}Yes{% else %}No{% endif %}
+						</div>
+
+						<div class="d-flex gap-2 align-items-center">
+							<form method="post" action="{% url 'task:toggle_done' task.id %}">
+								{% csrf_token %}
+								{% if task.is_completed %}
+								<button type="submit" class="btn btn-warning btn-sm">Mark as Incomplete</button>
+								{% else %}
+								<button type="submit" class="btn btn-success btn-sm">Mark as Complete</button>
+								{% endif %}
+							</form>
+							<a href="{% url 'task:task_myself_detail' task.id %}" class="btn btn-outline-primary btn-sm">Details</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-info">
+    <strong>No tasks assigned to you.</strong>
+  </div>
+  {% endif %}
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    function toggleDescription(taskId) {
-        const shortDesc = document.getElementById(`short-desc-${taskId}`);
-        const fullDesc = document.getElementById(`full-desc-${taskId}`);
-        const button = document.getElementById(`toggle-btn-${taskId}`);
+  function toggleDescription(taskId) {
+    const shortDesc = document.getElementById(`short-desc-${taskId}`);
+    const fullDesc = document.getElementById(`full-desc-${taskId}`);
+    const button = document.getElementById(`toggle-btn-${taskId}`);
 
-        if (shortDesc.style.display === "none") {
-            shortDesc.style.display = "inline";
-            fullDesc.style.display = "none";
-            button.textContent = "More";
-        } else {
-            shortDesc.style.display = "none";
-            fullDesc.style.display = "inline";
-            button.textContent = "Less";
-        }
+    if (shortDesc.style.display === "none") {
+      shortDesc.style.display = "inline";
+      fullDesc.style.display = "none";
+      button.textContent = "More";
+    } else {
+      shortDesc.style.display = "none";
+      fullDesc.style.display = "inline";
+      button.textContent = "Less";
     }
+  }
 </script>
 {% endblock %}
