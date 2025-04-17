@@ -1,5 +1,8 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponse
 from django.template.context_processors import request
 from django.urls import reverse_lazy, reverse
 
@@ -11,11 +14,11 @@ from .models import (
     Position
 )
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 
 
-class HomeView(generic.ListView):
+class HomeView(LoginRequiredMixin, generic.ListView):
     model = Task
     context_object_name = "home"
     template_name = "task/home.html"
@@ -23,29 +26,48 @@ class HomeView(generic.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        return Task.objects.filter(assignees=user).annotate(
+        queryset = Task.objects.filter(assignees=user).annotate(
             total_assignees=Count("assignees")
         ).filter(total_assignees=1).order_by("deadline")
 
+        query = self.request.GET.get("q")
+        if query:
+            queryset = queryset.filter(
+                Q(name__icontains=query)
+            )
+        return queryset
 
-class TaskListView(generic.ListView):
+
+class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
     context_object_name = "task_list"
     template_name = "task/task_list.html"
     paginate_by = 5
 
     def get_queryset(self):
-        return Task.objects.annotate(total_assignees=Count("assignees")).filter(
+        queryset = Task.objects.annotate(total_assignees=Count("assignees")).filter(
             total_assignees__gte=2).order_by("deadline")
+        query = self.request.GET.get("q")
+        if query:
+            queryset = queryset.filter(
+                Q(name__icontains=query) | Q(assignees__first_name__icontains=query)
+            )
+        return queryset
 
-
-class TaskDetailView(generic.DetailView):
+class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     model = Task
     context_object_name = "task_detail"
     template_name = "task/task_detail.html"
 
 
-class TaskCreateMyselfView(generic.CreateView):
+class TaskMyselfDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Task
+    context_object_name = "task_myself_detail"
+    template_name = "task/task_myself_detail.html"
+
+
+
+class TaskCreateMyselfView(LoginRequiredMixin, generic.CreateView):
     model = Task
     fields = ["name", "description", "deadline", "task_type", "is_completed", "priority"]
     context_object_name = "task_myself_create"
@@ -59,7 +81,7 @@ class TaskCreateMyselfView(generic.CreateView):
         return response
 
 
-class TaskCreateView(generic.CreateView):
+class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     model = Task
     form_class = TaskForm
     context_object_name = "task_create"
@@ -68,7 +90,7 @@ class TaskCreateView(generic.CreateView):
 
 
 
-class TaskUpdateView(generic.UpdateView):
+class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Task
     form_class = TaskForm
     context_object_name = "task_update"
@@ -78,15 +100,34 @@ class TaskUpdateView(generic.UpdateView):
         return reverse("task:task_detail", kwargs={"pk": self.object.pk})
 
 
-class TaskDeleteView(generic.DeleteView):
+class TaskMyselfUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Task
+    fields = ["name", "description", "deadline", "task_type", "is_completed", "priority"]
+    context_object_name = "task_myself_update"
+    template_name = "task/task_myself_update.html"
+
+    def get_success_url(self):
+        return reverse("task:task_myself_detail", kwargs={"pk": self.object.pk})
+
+
+class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Task
     context_object_name = "task_delete"
     template_name = "task/task_confirm_delete.html"
     success_url = reverse_lazy("task:home")
 
 
-class WorkersListView(generic.ListView):
+class WorkersListView(LoginRequiredMixin, generic.ListView):
     model = Worker
     context_object_name = "workers_list"
     template_name = "task/workers_list.html"
     paginate_by = 10
+
+
+@login_required
+def toggle_done(request: HttpRequest, pk: int) -> HttpResponse:
+    task = get_object_or_404(Task, pk=pk)
+    if request.method == "POST":
+        task.is_completed = not task.is_completed
+        task.save()
+    return redirect(request.META.get("HTTP_REFERER", "/"))
