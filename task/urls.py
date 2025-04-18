@@ -11,7 +11,7 @@ from task.views import (
     TaskMyselfDetailView,
     TaskMyselfUpdateView,
     WorkersListView,
-    toggle_done,
+    ToggleDoneView
 )
 
 
@@ -68,7 +68,7 @@ urlpatterns = [
     ),
     path(
         "task/<int:pk>/toggle_done/",
-        toggle_done,
+        ToggleDoneView.as_view(),
         name="toggle_done"
     ),
 ]
