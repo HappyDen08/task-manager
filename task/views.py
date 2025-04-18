@@ -4,15 +4,14 @@ from django.db.models import Count
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import get_object_or_404, redirect
+from django.views import generic, View
 
-from .forms import TaskForm
-from .models import (
+from task.forms import TaskForm
+from task.models import (
     Task,
     Worker
 )
-
-from django.shortcuts import get_object_or_404, redirect
-from django.views import generic
 
 
 class HomeView(LoginRequiredMixin, generic.ListView):
@@ -135,10 +134,10 @@ class WorkersListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 10
 
 
-@login_required
-def toggle_done(request: HttpRequest, pk: int) -> HttpResponse:
-    task = get_object_or_404(Task, pk=pk)
-    if request.method == "POST":
+class ToggleDoneView(LoginRequiredMixin, View):
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        task = get_object_or_404(Task, pk=pk)
         task.is_completed = not task.is_completed
         task.save()
-    return redirect(request.META.get("HTTP_REFERER", "/"))
+        return redirect(request.META.get("HTTP_REFERER", "/"))

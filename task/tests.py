@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from .models import Task, TaskType, Position
+from task.models import Task, TaskType, Position
 
 User = get_user_model()
 

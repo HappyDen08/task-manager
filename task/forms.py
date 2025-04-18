@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models import Q
 
-from .models import Task, Worker
+from task.models import Task, Worker
 
 
 class TaskForm(forms.ModelForm):
