@@ -18,8 +18,8 @@
           <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
 
           {% if field.name == "deadline" %}
-            <!-- Встановлюємо атрибути для поля дати -->
             <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control shadow-sm" value="{{ field.value }}">
+
           {% elif field.name == "is_completed" %}
             <div class="btn-group" role="group">
               <input type="radio" class="btn-check" name="is_completed" id="complete-yes" value="true" autocomplete="off"
@@ -30,16 +30,10 @@
                      {% if not field.value %}checked{% endif %}>
               <label class="btn btn-outline-danger" for="complete-no">No</label>
             </div>
+
           {% else %}
             {{ field }}
-            <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                const el = document.getElementById("{{ field.id_for_label }}");
-                if (el) {
-                  el.classList.add("form-control", "shadow-sm");
-                }
-              });
-            </script>
+            <input type="hidden" name="styled_field_ids" value="{{ field.id_for_label }}">
           {% endif %}
 
           {% if field.help_text %}
@@ -58,4 +52,20 @@
     </div>
   </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Знаходимо всі приховані input-и з id полів
+    const ids = document.querySelectorAll('input[name="styled_field_ids"]');
+    ids.forEach(input => {
+      const el = document.getElementById(input.value);
+      if (el) {
+        el.classList.add("form-control", "shadow-sm");
+      }
+      input.remove();  // прибираємо з DOM
+    });
+  });
+</script>
 {% endblock %}

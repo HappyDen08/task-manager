@@ -76,23 +76,3 @@
   {% endif %}
 </div>
 {% endblock %}
-
-{% block extra_js %}
-<script>
-  function toggleDescription(taskId) {
-    const shortDesc = document.getElementById(`short-desc-${taskId}`);
-    const fullDesc = document.getElementById(`full-desc-${taskId}`);
-    const button = document.getElementById(`toggle-btn-${taskId}`);
-
-    if (shortDesc.style.display === "none") {
-      shortDesc.style.display = "inline";
-      fullDesc.style.display = "none";
-      button.textContent = "More";
-    } else {
-      shortDesc.style.display = "none";
-      fullDesc.style.display = "inline";
-      button.textContent = "Less";
-    }
-  }
-</script>
-{% endblock %}
