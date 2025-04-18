@@ -79,7 +79,6 @@ class TaskCreateMyselfView(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        # додаємо поточного користувача як виконавця
         self.object.assignees.set([self.request.user])
         return response
 

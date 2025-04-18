@@ -12,7 +12,6 @@ class TaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Фільтруємо список працівників
         self.fields["assignees"].queryset = Worker.objects.filter(
             first_name__isnull=False,
             last_name__isnull=False,
