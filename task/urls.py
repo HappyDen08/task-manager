@@ -22,42 +22,42 @@ urlpatterns = [
         name="home"
     ),
     path(
-        "task/",
+        "tasks/",
         TaskListView.as_view(),
         name="task_list"
     ),
     path(
-        "task/<int:pk>/",
+        "tasks/<int:pk>/",
         TaskDetailView.as_view(),
         name="task_detail"
     ),
     path(
-        "task/myself/<int:pk>/",
+        "tasks/myself/<int:pk>/",
         TaskMyselfDetailView.as_view(),
         name="task_myself_detail"
     ),
     path(
-        "task/create/",
+        "tasks/create/",
         TaskCreateView.as_view(),
         name="task_create"
     ),
     path(
-        "task/myself/create",
+        "tasks/myself/create",
         TaskCreateMyselfView.as_view(),
         name="task_myself_create"
     ),
     path(
-        "task/<int:pk>/update/",
+        "tasks/<int:pk>/update/",
         TaskUpdateView.as_view(),
         name="task_update"
     ),
     path(
-        "task/<int:pk>/myself/update/",
+        "tasks/<int:pk>/myself/update/",
         TaskMyselfUpdateView.as_view(),
         name="task_myself_update"
     ),
     path(
-        "task/<int:pk>/delete/",
+        "tasks/<int:pk>/delete/",
         TaskDeleteView.as_view(),
         name="task_delete"
     ),
@@ -67,7 +67,7 @@ urlpatterns = [
         name="workers_list"
     ),
     path(
-        "task/<int:pk>/toggle_done/",
+        "tasks/<int:pk>/toggle_done/",
         ToggleDoneView.as_view(),
         name="toggle_done"
     ),
