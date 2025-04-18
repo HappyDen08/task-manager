@@ -1,14 +1,14 @@
 # 🗂️ Task Manager
 
-**Task Manager** — це веб-застосунок для керування завданнями, створений на Django. 
-Дозволяє створювати, переглядати, оновлювати та видаляти задачі, призначати їх на користувачів (воркерів), 
-а також переглядати задачі, де користувач є виконавцем або співвиконавцем.
+**Task Manager** is a web application for managing tasks, built with Django.  
+It allows users to create, view, update, and delete tasks, assign them to workers,  
+and see tasks where the user is either the sole assignee or one of multiple collaborators.
 
 ---
 
-## 🚀 Швидкий старт
+## 🚀 Quick Start
 
-### 1. Клонуй репозиторій
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/HappyDen08/task-manager.git
@@ -16,7 +16,7 @@ cd task-manager
 git checkout develop
 ```
 
-### 2. Створи та активуй віртуальне середовище
+### 2. Create and activate a virtual environment
 
 ```bash
 python -m venv venv
@@ -24,58 +24,63 @@ source venv/bin/activate      # Linux/macOS
 venv\Scripts\activate         # Windows
 ```
 
-### 3. Встанови залежності
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Виконай міграції
+### 4. Run migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Створи суперкористувача
+### 5. Create a superuser
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Запусти сервер
+### 6. Load the fixture data
+
+```bash
+python manage.py loaddata initial_data.json
+```
+
+### 7. Start the development server
 
 ```bash
 python manage.py runserver
 ```
 
-📍 Перейди в браузер за адресою [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+📍 Open your browser and go to [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-## ⚙️ Функціонал
+## ⚙️ Features
 
-- 🔐 Аутентифікація: логін/логаут/перенаправлення
-- 👷 Воркери: список працівників, сторінка профілю
-- ✅ Мої задачі: задачі, в яких користувач є єдиним виконавцем
-- 🤝 Спільні задачі: задачі з двома і більше виконавцями
-- ✍️ Створення та редагування задач
-- 🗑️ Видалення задач
-- 🔎 Пошук задач по імені та виконавцям
+- 🔐 Authentication: login/logout/redirects
+- 👷 Workers: worker list, profile pages
+- ✅ My Tasks: tasks where the user is the only assignee
+- 🤝 Shared Tasks: tasks with two or more assignees
+- ✍️ Create and update tasks
+- 🗑️ Delete tasks
+- 🔎 Search tasks by name and assignee
 - 🪄 Bootstrap 5 UI
-- ♻️ Тоглінг статусу виконання задач
+- ♻️ Toggle task completion status
 
 ---
 
-## 🛠️ Стек технологій
+## 🛠️ Tech Stack
 
 - **Backend**: Python 3, Django 5
 - **Frontend**: HTML, CSS, Bootstrap 5
-- **Інші**: HTMX (для динамічного завантаження), SQLite
+- **Extras**: HTMX (for dynamic updates), SQLite
 
+## 🧪 Testing
 
-## 🧪 Тести
-
-Тести для моделей і в'юшок знаходяться в `task/tests/`. Запуск:
+Tests for models and views can be found in `task/tests/`. To run tests:
 
 ```bash
 python manage.py test
@@ -83,40 +88,24 @@ python manage.py test
 
 ---
 
-## 📸 Скриншоти
 
-> _Додай сюди знімки головної сторінки, списку задач, форми створення тощо_
+## 🧩 Optional Features
 
----
-
-## 🧩 Опціональні фічі
-
-- [x] Пошук задач
-- [x] Пагінація
-- [x] Пріоритет задач
-- [x] Розділення на "Мої задачі" та "Спільні"
-- [ ] Експорт у PDF/Excel (опціонально)
-- [ ] API (можна додати за бажанням)
+- [x] Task search
+- [x] Pagination
+- [x] Task priority levels
+- [x] Separation of “My Tasks” and “Shared Tasks”
 
 ---
 
-## 🗃️ Структура бази даних
 
-> Додай скріншот з [draw.io](https://draw.io) або ER-діаграму, яка описує моделі:
-- Worker
-- Task
-- TaskType
-- Position
-
----
-
-## 🧠 Автор
+## 🧠 Author
 
 - GitHub: [HappyDen08](https://github.com/HappyDen08)
 - Django Project: _Task Manager_
 
 ---
 
-## 📜 Ліцензія
+## 📜 License
 
-Цей проєкт є частиною навчального завдання та може бути використаний для освітніх цілей.
+This project is part of a learning task and is intended for educational purposes.
