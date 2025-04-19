@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Update Task{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">📝 Update Task</h2>
+    <a href="{% url 'task:task_list' %}" class="btn btn-outline-secondary">← Back to Tasks</a>
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="card shadow-sm border-0 p-4">
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div class="mb-3">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+
+          {% if field.name == "deadline" %}
+            <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control shadow-sm" value="{{ field.value }}">
+
+          {% elif field.name == "is_completed" %}
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check" name="is_completed" id="complete-yes" value="true" autocomplete="off"
+                     {% if field.value %}checked{% endif %}>
+              <label class="btn btn-outline-success" for="complete-yes">Yes</label>
+
+              <input type="radio" class="btn-check" name="is_completed" id="complete-no" value="false" autocomplete="off"
+                     {% if not field.value %}checked{% endif %}>
+              <label class="btn btn-outline-danger" for="complete-no">No</label>
+            </div>
+
+          {% else %}
+            {{ field }}
+            <input type="hidden" name="styled_field_ids" value="{{ field.id_for_label }}">
+          {% endif %}
+
+          {% if field.help_text %}
+            <div class="form-text text-muted">{{ field.help_text }}</div>
+          {% endif %}
+          {% for error in field.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button type="submit" class="btn btn-success">✅ Update Task</button>
+        <a href="{% url 'task:task_list' %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll('input[name="styled_field_ids"]');
+    inputs.forEach(input => {
+      const el = document.getElementById(input.value);
+      if (el) {
+        el.classList.add("form-control", "shadow-sm");
+      }
+      input.remove();
+    });
+  });
+</script>
+{% endblock %}

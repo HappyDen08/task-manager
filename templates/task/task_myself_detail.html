@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Task: {{ task_myself_detail.name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{{ task_myself_detail.name }}</h4>
+      <span class="badge bg-{{ task_myself_detail.priority|lower }}">{{ task_myself_detail.priority }}</span>
+    </div>
+    <div class="card-body">
+      <p class="text-muted mb-2"><strong>Description:</strong></p>
+      <p>{{ task_myself_detail.description|linebreaks }}</p>
+
+      <p class="mt-3"><strong>Type:</strong> {{ task_myself_detail.task_type.name }}</p>
+
+      <p><strong>Deadline:</strong>
+        {% if task_myself_detail.deadline %}
+          {{ task_myself_detail.deadline|date:"M d, Y" }}
+        {% else %}
+          <span class="text-muted">No deadline</span>
+        {% endif %}
+      </p>
+
+      <p><strong>Status:</strong>
+        {% if task_myself_detail.is_completed %}
+          <span class="badge bg-success">Completed</span>
+        {% else %}
+          <span class="badge bg-warning text-dark">In Progress</span>
+        {% endif %}
+      </p>
+    </div>
+    <div class="card-footer text-end">
+      <a href="{% url 'task:task_myself_update' task_myself_detail.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+      <a href="{% url 'task:task_delete' task_myself_detail.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+      <a href="{% url 'task:home' %}" class="btn btn-secondary btn-sm">Back to list</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

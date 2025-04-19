@@ -1,0 +1,94 @@
+[
+  {
+    "model": "task.position",
+    "pk": 1,
+    "fields": {
+      "name": "Developer"
+    }
+  },
+  {
+    "model": "task.position",
+    "pk": 2,
+    "fields": {
+      "name": "Manager"
+    }
+  },
+  {
+    "model": "task.tasktype",
+    "pk": 1,
+    "fields": {
+      "name": "Bug"
+    }
+  },
+  {
+    "model": "task.tasktype",
+    "pk": 2,
+    "fields": {
+      "name": "Feature"
+    }
+  },
+  {
+    "model": "task.worker",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$fakehash1",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "john_doe",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-01-01T00:00:00Z",
+      "position": 1,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "task.worker",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$fakehash2",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "jane_smith",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-01-02T00:00:00Z",
+      "position": 2,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "task.task",
+    "pk": 1,
+    "fields": {
+      "name": "Fix login bug",
+      "description": "Fix the login issue on the homepage",
+      "deadline": "2025-04-30",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [1]
+    }
+  },
+  {
+    "model": "task.task",
+    "pk": 2,
+    "fields": {
+      "name": "Add dashboard page",
+      "description": "Implement a dashboard for user stats",
+      "deadline": "2025-05-05",
+      "is_completed": true,
+      "priority": "Medium",
+      "task_type": 2,
+      "assignees": [1, 2]
+    }
+  }
+]
