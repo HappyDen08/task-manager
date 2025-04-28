@@ -18,7 +18,7 @@
           <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
 
           {% if field.name == "deadline" %}
-            <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control shadow-sm" value="{{ field.value }}">
+            <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control shadow-sm" value="{{ field.value }}" min="{{ now|date:'Y-m-d' }}">
 
           {% elif field.name == "is_completed" %}
             <div class="btn-group" role="group">
