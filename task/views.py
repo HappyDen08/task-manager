@@ -1,10 +1,10 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.views import generic, View
 
 from task.forms import TaskForm
@@ -78,6 +78,16 @@ class TaskCreateMyselfView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("task:home")
 
     def form_valid(self, form):
+
+        deadline = form.cleaned_data.get('deadline')
+        if not deadline:
+
+            form.add_error('deadline', 'Deadline is required.')
+            return super().form_invalid(form)
+
+        if deadline < timezone.now().date():
+            form.add_error('deadline', 'Deadline cannot be in the past.')
+            return super().form_invalid(form)
         response = super().form_valid(form)
         self.object.assignees.set([self.request.user])
         return response

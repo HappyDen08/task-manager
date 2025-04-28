@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import Q
+from django.utils import timezone
 
 from task.models import Task, Worker
 
@@ -21,3 +22,11 @@ class TaskForm(forms.ModelForm):
             Q(last_name__regex=r"^\s*$") |
             Q(username__regex=r"^\s*$")
         )
+
+    def clean_deadline(self):
+        deadline = self.cleaned_data.get("deadline")
+        if deadline:
+            today = timezone.now().date()
+            if deadline < today:
+                raise forms.ValidationError("Date can't be in a past")
+        return deadline
