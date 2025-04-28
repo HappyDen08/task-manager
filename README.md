@@ -4,6 +4,19 @@
 It allows users to create, view, update, and delete tasks, assign them to workers,  
 and see tasks where the user is either the sole assignee or one of multiple collaborators.
 
+## **INTRO** 
+To view the site, go to https://task-manager-5gqu.onrender.com/.
+
+To explore the functionality, use the following login and password: "user" → "user12345".
+
+This user can create both personal and group tasks.
+An administrator determines who can create, edit, delete, or mark group tasks as completed by assigning the "Is Staff" status to a user.
+
+Access to your personal tasks is unrestricted — you have full CRUD rights over them.
+
+This application was developed for companies with restricted access managed exclusively through administration.
+Therefore, when you become part of the team, you will be registered and granted access.
+
 ---
 
 ## 🚀 Quick Start
